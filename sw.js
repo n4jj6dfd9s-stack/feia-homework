@@ -1,5 +1,5 @@
-const CACHE = "feia-homework-v9";
-const FILES = ["./", "./index.html", "./manifest.json", "./icon.svg", "./icon-192-v2.png", "./icon-512-v2.png", "./apple-touch-icon-v2.png"];
+const CACHE = "feia-homework-v10";
+const FILES = ["./", "./index.html", "./manifest.json", "./icon.svg", "./icon-192-v3.png", "./icon-512-v3.png", "./apple-touch-icon-v3.png"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES)).then(() => self.skipWaiting()));
