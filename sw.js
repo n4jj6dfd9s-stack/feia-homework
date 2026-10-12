@@ -1,4 +1,4 @@
-const CACHE = "feia-homework-v10";
+const CACHE = "feia-homework-v11";
 const FILES = ["./", "./index.html", "./manifest.json", "./icon.svg", "./icon-192-v3.png", "./icon-512-v3.png", "./apple-touch-icon-v3.png"];
 
 self.addEventListener("install", (e) => {
