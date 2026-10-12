@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="FEIA Homework" />
+  <meta name="theme-color" content="#0c111d" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
+  <title>FEIA Homework</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --red: #f11900;
+      --dark: #0c111d;
+      --blue: #4d65ff;
+      --border: #e5e7eb;
+      --bg: #f9fafb;
+      --green: #16a34a;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Montserrat, -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: var(--dark);
+      color: #fff;
+      padding: 1rem 1.25rem;
+      border-bottom: 3px solid var(--red);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+      padding-top: calc(1rem + env(safe-area-inset-top));
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 1.375rem;
+      letter-spacing: -0.02em;
+    }
+
+    .logo span {
+      color: var(--red);
+    }
+
+    .header-sub {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #9ca3af;
+      margin-top: 0.15rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .days {
+      display: flex;
+      gap: 0.4rem;
+      overflow-x: auto;
+      padding: 0.875rem 1rem;
+      background: #111827;
+      position: sticky;
+      top: 71px;
+      z-index: 9;
+      border-bottom: 1px solid #1f2937;
+      scrollbar-width: none;
+    }
+
+    .days::-webkit-scrollbar {
+      display: none;
+    }
+
+    .day-btn {
+      flex: 1 0 auto;
+      min-width: 60px;
+      background: transparent;
+      color: #d1d5db;
+      border: 1px solid #374151;
+      border-radius: 8px;
+      padding: 0.5rem 0.5rem 0.4rem;
+      font-weight: 700;
+      font-size: 0.8125rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .day-btn .dnum {
+      display: block;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: #6b7280;
+      margin-top: 0.1rem;
+    }
+
+    .day-btn.active {
+      background: var(--red);
+      border-color: var(--red);
+      color: #fff;
+    }
+
+    .day-btn.active .dnum {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .day-btn.today {
+      box-shadow: inset 0 0 0 2px #facc15;
+    }
+
+    .container {
+      max-width: 720px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.875rem;
+      padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+    }
+
+    .day-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--dark);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+
+    .day-title small {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #6b7280;
+    }
+
+    .period {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      border-left: 5px solid var(--red);
+    }
+
+    .period.lunch {
+      border-left-color: #f59e0b;
+    }
+
+    .period.lunch .p-name {
+      color: #b45309;
+    }
+
+    .period-head {
+      padding: 0.75rem 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      background: linear-gradient(90deg, #fafafa 0%, #fff 100%);
+    }
+
+    .p-left {
+      min-width: 0;
+    }
+
+    .p-label {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #9ca3af;
+    }
+
+    .p-name {
+      font-size: 1.0625rem;
+      font-weight: 800;
+      color: var(--dark);
+      margin-top: 0.05rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .p-time {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: #fff;
+      background: var(--dark);
+      padding: 0.3rem 0.6rem;
+      border-radius: 999px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .p-time .arrow {
+      color: var(--red);
+    }
+
+    .hw-wrap {
+      padding: 0 0.9rem 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .hw-label {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #6b7280;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .hw-label .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--red);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 64px;
+      resize: vertical;
+      padding: 0.625rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9375rem;
+      line-height: 1.45;
+      transition: border 0.15s ease, box-shadow 0.15s ease;
+      background: #fff;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(241, 25, 0, 0.08);
+    }
+
+    .done-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #4b5563;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .link-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      align-self: flex-start;
+      background: rgba(77, 101, 255, 0.1);
+      color: var(--blue);
+      border: 1px solid rgba(77, 101, 255, 0.3);
+      text-decoration: none;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      padding: 0.4rem 0.7rem;
+      border-radius: 8px;
+      transition: background 0.15s ease;
+    }
+
+    .link-chip:active {
+      background: rgba(77, 101, 255, 0.2);
+    }
+
+    .done-row input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--green);
+      cursor: pointer;
+    }
+
+    .period.done {
+      border-left-color: var(--green);
+    }
+
+    .period.done textarea {
+      text-decoration: line-through;
+      color: #9ca3af;
+    }
+
+    .footer-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      padding: 0.9rem 1rem;
+      background: var(--dark);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 12px;
+      font-size: 0.875rem;
+      font-weight: 700;
+      border-bottom: 3px solid var(--red);
+      transition: opacity 0.15s ease;
+    }
+
+    .footer-link:active {
+      opacity: 0.85;
+    }
+
+    .footer-link .fl-icon {
+      background: var(--red);
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.75rem;
+      padding: 0.15rem 0.4rem;
+      border-radius: 5px;
+      letter-spacing: -0.02em;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(1.25rem + env(safe-area-inset-bottom));
+      transform: translateX(-50%) translateY(80px);
+      background: var(--dark);
+      color: #fff;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      transition: all 0.25s ease;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">FEIA<span> HOMEWORK</span></div>
+    <div class="header-sub">Fort Erie International Academy</div>
+  </header>
+
+  <div class="days" id="days"></div>
+
+  <div class="container">
+    <div class="day-title">
+      <span id="dayTitle">Monday</span>
+      <small id="dayDate"></small>
+    </div>
+    <div id="periods"></div>
+    <a class="footer-link" href="https://feia.brightspace.com/d2l/home" target="_blank" rel="noopener">
+      <span class="fl-icon">FEIA</span> Brightspace →
+    </a>
+  </div>
+
+  <div class="toast" id="toast">Saved</div>
+
+  <script>
+    const PERIODS = [
+      { id: "p1", label: "Period 1", name: "HSP3Ua", start: "10:20", end: "11:35", type: "class" },
+      { id: "lunch", label: "Break", name: "Lunch", start: "11:40", end: "12:55", type: "lunch" },
+      { id: "p3", label: "Period 3", name: "ESLDOa", start: "13:00", end: "14:15", type: "class", link: "https://ellii.com/students/classes", linkText: "Ellii — class page" },
+      { id: "p4", label: "Period 4", name: "MCF3Ma", start: "14:20", end: "15:35", type: "class" },
+    ];
+
+    const DAYS = [
+      { long: "Monday", short: "Mon" },
+      { long: "Tuesday", short: "Tue" },
+      { long: "Wednesday", short: "Wed" },
+      { long: "Thursday", short: "Thu" },
+      { long: "Friday", short: "Fri" },
+    ];
+
+    const KEY = "feia_homework_v1";
+    const WEEK_KEY = "feia_homework_week_v1";
+    const LABELS = ["1st", "2nd", "3rd", "4th", "5th"];
+
+    let newWeek = false;
+    let data = initData();
+    let currentDay = todayIndex();
+    let toastTimer = null;
+
+    function mondayOf(date) {
+      const d = new Date(date);
+      d.setHours(0, 0, 0, 0);
+      const day = d.getDay();
+      d.setDate(d.getDate() + (day === 0 ? -6 : 1 - day));
+      return d;
+    }
+
+    function weekId(date) {
+      const m = mondayOf(date);
+      const y = m.getFullYear();
+      const mo = String(m.getMonth() + 1).padStart(2, "0");
+      const da = String(m.getDate()).padStart(2, "0");
+      return y + "-" + mo + "-" + da;
+    }
+
+    function initData() {
+      const current = weekId(new Date());
+      const stored = localStorage.getItem(WEEK_KEY);
+      if (stored === current) return load();
+      localStorage.setItem(WEEK_KEY, current);
+      localStorage.setItem(KEY, "{}");
+      newWeek = stored !== null;
+      return {};
+    }
+
+    function load() {
+      try {
+        return JSON.parse(localStorage.getItem(KEY) || "{}") || {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function save() {
+      localStorage.setItem(KEY, JSON.stringify(data));
+      showToast("Saved");
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      if (msg) t.textContent = msg;
+      t.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove("show"), msg && msg !== "Saved" ? 2200 : 1100);
+    }
+
+    function todayIndex() {
+      const d = new Date().getDay();
+      return d >= 1 && d <= 5 ? d - 1 : 0;
+    }
+
+    function entry(day, pid) {
+      if (!data[day]) data[day] = {};
+      if (!data[day][pid]) data[day][pid] = { text: "", done: false };
+      return data[day][pid];
+    }
+
+    function renderDays() {
+      const wrap = document.getElementById("days");
+      wrap.innerHTML = "";
+      const t = todayIndex();
+      DAYS.forEach((d, i) => {
+        const b = document.createElement("button");
+        b.className = "day-btn" + (i === currentDay ? " active" : "") + (i === t ? " today" : "");
+        b.innerHTML = `${LABELS[i]}<span class="dnum">${d.long}</span>`;
+        b.onclick = () => {
+          currentDay = i;
+          renderDays();
+          renderPeriods();
+        };
+        wrap.appendChild(b);
+      });
+    }
+
+    function renderPeriods() {
+      document.getElementById("dayTitle").textContent = DAYS[currentDay].long;
+      document.getElementById("dayDate").textContent = dateOf(currentDay);
+
+      const wrap = document.getElementById("periods");
+      wrap.innerHTML = "";
+      PERIODS.forEach((p) => {
+        const e = entry(currentDay, p.id);
+        const card = document.createElement("div");
+        card.className = "period" + (p.type === "lunch" ? " lunch" : "") + (e.done ? " done" : "");
+
+        card.innerHTML = `
+          <div class="period-head">
+            <div class="p-left">
+              <div class="p-label">${p.label}</div>
+              <div class="p-name">${p.name}</div>
+            </div>
+            <div class="p-time">${p.start}<span class="arrow">→</span>${p.end}</div>
+          </div>
+          <div class="hw-wrap">
+            ${p.type === "lunch" ? "" : '<div class="hw-label"><span class="dot"></span>Homework</div>'}
+            <textarea placeholder="${p.type === "lunch" ? "Things I need to do during my lunch" : "Write your homework for " + p.name + "..."}"></textarea>${
+              p.link
+                ? `<a class="link-chip" href="${p.link}" target="_blank" rel="noopener">🔗 ${p.linkText || "Open link"}</a>`
+                : ""
+            }
+            <label class="done-row">
+              <input type="checkbox" ${e.done ? "checked" : ""} />
+              Done
+            </label>
+          </div>`;
+
+        const ta = card.querySelector("textarea");
+        const cb = card.querySelector("input");
+        ta.value = e.text;
+
+        ta.addEventListener("input", () => {
+          e.text = ta.value;
+          save();
+        });
+        cb.addEventListener("change", () => {
+          e.done = cb.checked;
+          card.classList.toggle("done", cb.checked);
+          save();
+        });
+
+        wrap.appendChild(card);
+      });
+    }
+
+    function dateOf(dayIndex) {
+      const m = mondayOf(new Date());
+      m.setDate(m.getDate() + dayIndex);
+      return m.toLocaleDateString("en-CA", { month: "short", day: "numeric" });
+    }
+
+    function checkWeek() {
+      const current = weekId(new Date());
+      if (localStorage.getItem(WEEK_KEY) === current) return;
+      localStorage.setItem(WEEK_KEY, current);
+      localStorage.setItem(KEY, "{}");
+      data = {};
+      currentDay = todayIndex();
+      renderDays();
+      renderPeriods();
+      showToast("New week — clean slate");
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) checkWeek();
+    });
+    window.addEventListener("focus", checkWeek);
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js").catch(() => {});
+      });
+    }
+
+    renderDays();
+    renderPeriods();
+    if (newWeek) setTimeout(() => showToast("New week — clean slate"), 400);
+  </script>
+</body>
+
+</html>

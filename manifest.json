@@ -1,0 +1,29 @@
+{
+  "name": "FEIA Homework",
+  "short_name": "FEIA HW",
+  "description": "Homework diary for Fort Erie International Academy",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0c111d",
+  "theme_color": "#0c111d",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
